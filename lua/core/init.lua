@@ -1,0 +1,8 @@
+require('core.netrw')
+require('core.option')
+require('core.mapping')
+require('core.winbar')
+require('core.statusline')
+require('core.fold')
+require('core.autocmd')
+require('core.commands')

@@ -1,0 +1,160 @@
+--- Startup times for process: Primary (or UI client) ---
+
+times in msec
+ clock   self+sourced   self:  sourced script
+ clock   elapsed:              other lines
+
+000.002  000.002: --- NVIM STARTING ---
+000.630  000.628: event init
+000.914  000.284: early init
+001.121  000.208: locale set
+001.315  000.193: init first window
+002.777  001.462: inits 1
+002.805  000.028: window checked
+002.951  000.146: parsing arguments
+005.336  000.246  000.246: require('vim.shared')
+005.734  000.145  000.145: require('vim.inspect')
+005.944  000.168  000.168: require('vim._options')
+005.978  000.628  000.315: require('vim._editor')
+006.099  000.117  000.117: require('vim._system')
+006.105  001.147  000.156: require('vim._init_packages')
+006.111  002.013: init lua interpreter
+011.860  005.749: nvim_ui_attach
+014.960  003.100: nvim_set_client_info
+014.983  000.023: --- NVIM STARTED ---
+
+--- Startup times for process: Embedded ---
+
+times in msec
+ clock   self+sourced   self:  sourced script
+ clock   elapsed:              other lines
+
+000.003  000.003: --- NVIM STARTING ---
+000.794  000.791: event init
+001.230  000.436: early init
+001.518  000.288: locale set
+001.773  000.256: init first window
+003.937  002.163: inits 1
+004.022  000.085: window checked
+004.193  000.171: parsing arguments
+006.411  000.196  000.196: require('vim.shared')
+006.900  000.156  000.156: require('vim.inspect')
+007.110  000.165  000.165: require('vim._options')
+007.145  000.721  000.400: require('vim._editor')
+007.264  000.114  000.114: require('vim._system')
+007.270  001.138  000.107: require('vim._init_packages')
+007.277  001.946: init lua interpreter
+007.515  000.238: expanding arguments
+007.696  000.181: inits 2
+008.822  001.126: init highlight
+008.831  000.009: waiting for UI
+009.385  000.554: done waiting for UI
+009.413  000.028: clear screen
+009.994  000.039  000.039: require('vim.keymap')
+012.422  000.380  000.380: sourcing nvim_exec2()
+012.890  003.468  003.049: require('vim._defaults')
+012.898  000.016: init default mappings & autocommands
+014.071  000.107  000.107: sourcing /usr/local/share/nvim/runtime/ftplugin.vim
+014.238  000.067  000.067: sourcing /usr/local/share/nvim/runtime/indent.vim
+015.543  000.893  000.893: require('core.netrw')
+015.766  000.214  000.214: require('core.option')
+016.398  000.455  000.455: require('utils.utils')
+017.195  001.424  000.969: require('core.mapping')
+017.365  000.164  000.164: require('core.winbar')
+017.657  000.286  000.286: require('core.statusline')
+018.643  000.861  000.861: require('vim.iter')
+018.700  001.037  000.176: require('core.fold')
+018.938  000.230  000.230: require('core.autocmd')
+019.091  000.148  000.148: require('core.commands')
+019.096  004.574  000.177: require('core')
+021.023  000.175  000.175: require('vim._async')
+021.555  002.330  002.155: require('vim.pack')
+021.748  000.050  000.050: require('vim.fs')
+021.834  000.011  000.011: require('vim.F')
+022.434  000.050  000.050: sourcing /home/aya/.local/share/nvim/site/pack/core/opt/which-key.nvim/plugin/which-key.lua
+025.236  000.282  000.282: require('nvim-treesitter.utils')
+029.992  000.155  000.155: require('vim.treesitter.language')
+030.058  000.060  000.060: require('vim.func')
+030.169  000.105  000.105: require('vim.func._memoize')
+030.284  001.176  000.857: require('vim.treesitter.query')
+030.457  000.169  000.169: require('vim.treesitter._range')
+030.474  002.237  000.891: require('vim.treesitter.languagetree')
+030.482  002.741  000.504: require('vim.treesitter')
+031.116  005.874  003.133: require('nvim-treesitter.parsers')
+032.151  000.068  000.068: require('nvim-treesitter.compat')
+032.731  000.390  000.390: require('nvim-treesitter.ts_utils')
+032.741  000.586  000.196: require('nvim-treesitter.tsrange')
+032.821  000.078  000.078: require('nvim-treesitter.caching')
+032.837  001.058  000.326: require('nvim-treesitter.query')
+032.864  001.566  000.508: require('nvim-treesitter.configs')
+032.870  001.750  000.184: require('nvim-treesitter.info')
+033.169  000.297  000.297: require('nvim-treesitter.shell_command_selectors')
+033.205  009.475  001.271: require('nvim-treesitter.install')
+033.286  000.079  000.079: require('nvim-treesitter.statusline')
+033.445  000.156  000.156: require('nvim-treesitter.query_predicates')
+033.451  010.332  000.622: require('nvim-treesitter')
+034.338  011.281  000.950: sourcing /home/aya/.local/share/nvim/site/pack/core/opt/nvim-treesitter/plugin/nvim-treesitter.lua
+034.457  015.306  001.583: require('configs.pack')
+034.464  015.365  000.059: require('configs')
+034.467  020.017  000.078: sourcing /home/aya/.config/nvim/init.lua
+034.475  001.386: sourcing vimrc file(s)
+034.703  000.049  000.049: sourcing nvim_exec2() called at /usr/local/share/nvim/runtime/filetype.lua:0
+034.707  000.169  000.119: sourcing /usr/local/share/nvim/runtime/filetype.lua
+034.897  000.077  000.077: sourcing /usr/local/share/nvim/runtime/syntax/synload.vim
+034.994  000.243  000.167: sourcing /usr/local/share/nvim/runtime/syntax/syntax.vim
+035.327  000.046  000.046: sourcing /home/aya/.local/share/nvim/site/pack/core/opt/nvim-treesitter/plugin/nvim-treesitter.lua
+035.447  000.028  000.028: sourcing /home/aya/.local/share/nvim/site/pack/core/opt/which-key.nvim/plugin/which-key.lua
+036.022  000.168  000.168: sourcing /usr/local/share/nvim/runtime/plugin/gzip.vim
+036.701  000.236  000.236: sourcing /usr/local/share/nvim/runtime/pack/dist/opt/matchit/plugin/matchit.vim
+036.760  000.705  000.468: sourcing /usr/local/share/nvim/runtime/plugin/matchit.vim
+036.929  000.135  000.135: sourcing /usr/local/share/nvim/runtime/plugin/matchparen.vim
+037.603  000.245  000.245: sourcing /usr/local/share/nvim/runtime/pack/dist/opt/netrw/plugin/netrwPlugin.vim
+037.660  000.690  000.446: sourcing /usr/local/share/nvim/runtime/plugin/netrwPlugin.vim
+037.835  000.138  000.138: sourcing /usr/local/share/nvim/runtime/plugin/rplugin.vim
+037.889  000.018  000.018: sourcing /usr/local/share/nvim/runtime/plugin/spellfile.vim
+038.005  000.084  000.084: sourcing /usr/local/share/nvim/runtime/plugin/tarPlugin.vim
+038.062  000.019  000.019: sourcing /usr/local/share/nvim/runtime/plugin/tutor.vim
+038.280  000.180  000.180: sourcing /usr/local/share/nvim/runtime/plugin/zipPlugin.vim
+038.391  000.069  000.069: sourcing /usr/local/share/nvim/runtime/plugin/editorconfig.lua
+038.563  000.112  000.112: sourcing /usr/local/share/nvim/runtime/plugin/man.lua
+038.741  000.126  000.126: sourcing /usr/local/share/nvim/runtime/plugin/nvim/net.lua
+038.984  000.196  000.196: sourcing /usr/local/share/nvim/runtime/plugin/osc52.lua
+039.172  000.147  000.147: sourcing /usr/local/share/nvim/runtime/plugin/shada.lua
+039.265  000.046  000.046: sourcing /usr/local/share/nvim/runtime/plugin/tohtml.lua
+039.288  001.495: loading rtp plugins
+039.440  000.152: loading packages
+039.802  000.362: loading after plugins
+039.815  000.013: inits 3
+043.438  003.623: reading ShaDa
+049.257  001.015  001.015: require('vim.lsp.protocol')
+049.292  001.206  000.192: require('vim.lsp.log')
+050.673  001.377  001.377: require('vim.lsp.util')
+051.096  000.196  000.196: require('vim.lsp.sync')
+051.103  000.426  000.230: require('vim.lsp._changetracking')
+051.601  000.180  000.180: require('vim.lsp._transport')
+051.758  000.005  000.005: require('string.buffer')
+051.761  000.096  000.091: require('vim._stringbuffer')
+051.765  000.660  000.385: require('vim.lsp.rpc')
+051.805  005.375  001.707: require('vim.lsp')
+052.473  000.663  000.663: require('vim.lsp.client')
+054.239  001.762  001.762: require('vim.diagnostic')
+054.323  003.084: opening buffers
+054.617  000.264  000.264: require('configs.lsp')
+054.651  000.064: BufEnter autocommands
+054.653  000.003: editing files in windows
+057.606  000.195  000.195: sourcing nvim_exec2() called at /home/aya/.config/nvim/colors/ayu.lua:0
+057.692  000.381  000.187: sourcing /home/aya/.config/nvim/colors/ayu.lua
+063.439  005.596  005.596: sourcing /usr/local/share/nvim/runtime/pack/dist/opt/netrw/autoload/netrw.vim
+063.757  000.032  000.032: sourcing /home/aya/.local/share/nvim/.netrwhist
+067.431  002.246  002.246: require('vim.filetype')
+072.236  004.292  004.292: require('vim.filetype.detect')
+076.371  000.306  000.306: sourcing /usr/local/share/nvim/runtime/pack/dist/opt/netrw/syntax/netrw.vim
+079.336  000.250  000.250: sourcing /usr/local/share/nvim/runtime/pack/dist/opt/netrw/syntax/netrw.vim
+081.642  000.597  000.597: sourcing /usr/local/share/nvim/runtime/autoload/provider/clipboard.vim
+086.526  000.386  000.386: sourcing /usr/local/share/nvim/runtime/pack/dist/opt/netrw/syntax/netrw.vim
+089.400  020.659: VimEnter autocommands
+089.540  000.140: UIEnter autocommands
+089.544  000.004: before starting main loop
+090.200  000.656: first screen update
+090.202  000.003: --- NVIM STARTED ---
+
