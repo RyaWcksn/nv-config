@@ -64,7 +64,7 @@ local search_file = function()
 end
 vim.keymap.set('n', '<leader>ff', search_file, { desc = "Search file" })
 vim.keymap.set('n', '<leader>fr', utils.search_and_replace, { desc = "Search and replace" })
-vim.keymap.set('n', '<leader>fw', utils.search_and_qflist_names, { desc = "Search word" })
+vim.keymap.set('n', '<leader>fw', utils.search_words_and_qflist, { desc = "Search words in codebase" })
 
 -- vim.keymap.set('n', '<leader>gg', utils.open_command('lazygit'), { desc = "Open lazygit" })
 

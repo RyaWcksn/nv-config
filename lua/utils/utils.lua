@@ -281,4 +281,53 @@ M.open_daily_note = function()
 	end
 end
 
+M.search_words_and_qflist = function()
+	local win = M.create_floating_window()
+	local selected_words_file = vim.fn.tempname()
+
+	local fzf_cmd = string.format(
+		"rg -o -N --no-filename '[a-zA-Z_][a-zA-Z_0-9]*' . | sort -u | fzf --multi --bind 'enter:select-all+accept' > %s",
+		vim.fn.shellescape(selected_words_file)
+	)
+	vim.cmd("terminal " .. fzf_cmd)
+
+	vim.api.nvim_create_autocmd("TermClose", {
+		once = true,
+		callback = function()
+			vim.api.nvim_win_close(win, true)
+
+			local selected_words = vim.fn.readfile(selected_words_file)
+			os.remove(selected_words_file)
+
+			if #selected_words == 0 then
+				vim.notify("No words selected", vim.log.levels.INFO)
+				return
+			end
+
+			local all_results = {}
+			for _, word in ipairs(selected_words) do
+				if word ~= "" then
+					local search_cmd = "rg --vimgrep " .. vim.fn.shellescape(word)
+					local results = vim.fn.systemlist(search_cmd)
+					for _, res in ipairs(results) do
+						table.insert(all_results, res)
+					end
+				end
+			end
+
+			if #all_results == 0 then
+				vim.notify("No matches found for the selected words", vim.log.levels.WARN)
+				return
+			end
+
+			vim.fn.setqflist({}, 'r', {
+				title = 'Search Results',
+				lines = all_results,
+			})
+			vim.cmd("copen")
+		end
+	})
+	vim.cmd('startinsert')
+end
+
 return M
