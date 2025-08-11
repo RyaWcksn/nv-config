@@ -54,6 +54,7 @@ local lazygit = function()
 end
 vim.keymap.set('n', '<leader>gg', lazygit, { desc = "Open lazygit" })
 vim.keymap.set({ 'n', 'v' }, '<leader>gb', utils.git_blame_current_line, { desc = "Git Blame current line" })
+vim.keymap.set('n', '<leader>fg', utils.find_and_switch_branch, { desc = "Find and switch git branch" })
 
 
 -- Searching feature

@@ -15,11 +15,12 @@ M.create_floating_window = function()
 		col = (max_width - width) / 2,
 		style = "minimal",
 		border = "rounded",
+		title = "Floating"
 	})
 	return win
 end
 
-M.search_and_qflist_names = function()
+M.search_word = function()
 	local win = M.create_floating_window()
 	local tmpfile = vim.fn.tempname()
 	local cmd = string.format(
@@ -329,5 +330,104 @@ M.search_words_and_qflist = function()
 	})
 	vim.cmd('startinsert')
 end
+
+M.find_and_switch_branch = function()
+	local win = M.create_floating_window()
+	local branch_list_file = vim.fn.tempname()
+	local result_file = vim.fn.tempname()
+
+	-- Get all branches
+	local get_branches_cmd = "git branch -a"
+	local branches_raw = vim.fn.systemlist(get_branches_cmd)
+
+	local branches_clean = {}
+	for _, branch in ipairs(branches_raw) do
+		local clean_branch = branch:gsub("^[ *]*", ""):gsub("remotes/origin/", "")
+		table.insert(branches_clean, clean_branch)
+	end
+
+    -- get unique branches
+    local branches_unique = {}
+    local branches_set = {}
+    for _, branch in ipairs(branches_clean) do
+        if not branches_set[branch] then
+            branches_set[branch] = true
+            table.insert(branches_unique, branch)
+        end
+    end
+
+	vim.fn.writefile(branches_unique, branch_list_file)
+
+	local fzf_cmd = string.format(
+		"cat %s | fzf --print-query --expect=enter > %s",
+		vim.fn.shellescape(branch_list_file),
+		vim.fn.shellescape(result_file)
+	)
+	vim.cmd("terminal " .. fzf_cmd)
+
+	vim.api.nvim_create_autocmd("TermClose", {
+		once = true,
+		callback = function()
+			vim.api.nvim_win_close(win, true)
+
+			os.remove(branch_list_file)
+
+			local result = vim.fn.readfile(result_file)
+			os.remove(result_file)
+
+			if #result < 2 then
+				vim.notify("No branch selected", vim.log.levels.INFO)
+				return
+			end
+
+			local key = result[1]
+			local query = result[2]
+			local selection = result[3]
+
+			local branch_to_checkout
+			if selection and selection ~= "" then
+				branch_to_checkout = selection
+			elseif query and query ~= "" then
+				branch_to_checkout = query
+			end
+
+			if branch_to_checkout then
+				local branch_exists = false
+				for _, branch in ipairs(branches_unique) do
+					if branch == branch_to_checkout then
+						branch_exists = true
+						break
+					end
+				end
+
+				if branch_exists then
+					-- checkout
+					local checkout_cmd = "git checkout " .. vim.fn.shellescape(branch_to_checkout)
+					local output = vim.fn.system(checkout_cmd)
+					if vim.v.shell_error == 0 then
+						vim.notify("Switched to branch: " .. branch_to_checkout, vim.log.levels.INFO)
+					else
+						vim.notify("Failed to switch to branch: " .. branch_to_checkout, vim.log.levels.ERROR)
+						vim.notify(output, vim.log.levels.ERROR)
+					end
+				else
+					-- create
+					local create_cmd = "git checkout -b " .. vim.fn.shellescape(branch_to_checkout)
+					local output = vim.fn.system(create_cmd)
+					if vim.v.shell_error == 0 then
+						vim.notify("Created and switched to new branch: " .. branch_to_checkout, vim.log.levels.INFO)
+					else
+						vim.notify("Failed to create branch: " .. branch_to_checkout, vim.log.levels.ERROR)
+						vim.notify(output, vim.log.levels.ERROR)
+					end
+				end
+			else
+				vim.notify("No branch selected or created.", vim.log.levels.INFO)
+			end
+		end
+	})
+	vim.cmd('startinsert')
+end
+
 
 return M
