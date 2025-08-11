@@ -17,7 +17,7 @@ local palette = {
 	base0F = '#e6b450'
 }
 
-vim.cmd("highlight clear")
+vim.cmd.highlight("clear")
 vim.o.background = "dark"
 vim.g.colors_name = "ayu"
 
