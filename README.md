@@ -10,10 +10,10 @@ The configuration is optimized for a fast startup time.
 --- NVIM STARTED ---
 clock   self+sourced   self:  sourced script
 ...
-090.202  000.003: --- NVIM STARTED ---
+059.368  000.002: --- NVIM STARTED ---
 ```
 
-The total startup time is approximately **90ms**.
+The total startup time is approximately **60ms**.
 
 ## 📦 Plugins
 
