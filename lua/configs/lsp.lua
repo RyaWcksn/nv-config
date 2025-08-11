@@ -32,6 +32,7 @@ local config = {
 vim.diagnostic.config(config)
 
 vim.api.nvim_create_autocmd('LspAttach', {
+	once = true,
 	callback = function(ev)
 		local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
 		vim.notify("LSP client attached: " .. client.name)

@@ -1,7 +1,9 @@
 require('core')
 require('configs')
 
-vim.api.nvim_create_autocmd('VimEnter', {
+if vim.loader then vim.loader.enable() end
+
+vim.api.nvim_create_autocmd('UIEnter', {
 	callback = function()
 		vim.cmd.colorscheme("ayu")
 	end,
