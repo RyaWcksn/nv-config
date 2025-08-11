@@ -1,6 +1,8 @@
-local M = {}
+local M                   = {}
+local api                 = vim.api
+local fn                  = vim.fn
 
-M.create_floating_window = function()
+M.create_floating_window  = function()
 	local max_height = vim.api.nvim_win_get_height(0)
 	local max_width = vim.api.nvim_win_get_width(0)
 	local height = math.floor(max_height * 0.8)
@@ -20,7 +22,7 @@ M.create_floating_window = function()
 	return win
 end
 
-M.search_word = function()
+M.search_word             = function()
 	local win = M.create_floating_window()
 	local tmpfile = vim.fn.tempname()
 	local cmd = string.format(
@@ -58,7 +60,7 @@ M.search_word = function()
 	vim.cmd('startinsert')
 end
 
-M.get_file = function(callback)
+M.get_file                = function(callback)
 	local win = M.create_floating_window()
 	local tmpfile = vim.fn.tempname()
 
@@ -83,20 +85,20 @@ M.get_file = function(callback)
 	vim.cmd('startinsert')
 end
 
-M.open_command = function(cmd)
+M.open_command            = function(cmd)
 	M.create_floating_window()
 	local a = vim.cmd.term(cmd or nil)
 	print(a)
 	vim.cmd("startinsert")
 end
 
-M.open_file_tree = function()
+M.open_file_tree          = function()
 	vim.api.nvim_command('topleft vsplit')
 	vim.api.nvim_win_set_width(0, 30)
 	vim.cmd.edit('.')
 end
 
-M.git_blame_current_line = function()
+M.git_blame_current_line  = function()
 	-- Determine visual or normal mode range
 	local mode = vim.fn.mode()
 	local start_line, end_line
@@ -153,7 +155,7 @@ M.git_blame_current_line = function()
 	end
 end
 
-M.search = function()
+M.search                  = function()
 	local search = vim.fn.input("Search for: ")
 	-- Escape special shell characters for safe execution
 	local escaped_input = search:gsub("'", [["]])
@@ -174,7 +176,7 @@ M.search = function()
 	vim.cmd("copen")
 end
 
-M.search_and_replace = function()
+M.search_and_replace      = function()
 	local search = vim.fn.input("Search for: ")
 	if search == "" then
 		vim.notify("Nothing to search...", vim.log.levels.INFO)
@@ -186,7 +188,7 @@ M.search_and_replace = function()
 	vim.cmd(cmd)
 end
 
-M.buffers_to_quickfix = function()
+M.buffers_to_quickfix     = function()
 	local buffers = vim.api.nvim_list_bufs() -- Get all buffers
 	local quickfix_list = {}
 
@@ -215,7 +217,7 @@ M.buffers_to_quickfix = function()
 	print("Buffers added to quickfix list.")
 end
 
-M.file_picker = function()
+M.file_picker             = function()
 	vim.ui.input({ prompt = "Search filenames > " }, function(input)
 		if not input or input == "" then return end
 
@@ -265,7 +267,7 @@ M.file_picker = function()
 	end)
 end
 
-M.open_daily_note = function()
+M.open_daily_note         = function()
 	local notes_dir = vim.fn.expand("~/Notes/Journal") -- Change this to your Notes directory
 	local date = os.date("%y-%m-%d")
 	local filepath = notes_dir .. "/" .. date .. ".md"
@@ -331,7 +333,7 @@ M.search_words_and_qflist = function()
 	vim.cmd('startinsert')
 end
 
-M.find_and_switch_branch = function()
+M.find_and_switch_branch  = function()
 	local win = M.create_floating_window()
 	local branch_list_file = vim.fn.tempname()
 	local result_file = vim.fn.tempname()
@@ -346,15 +348,15 @@ M.find_and_switch_branch = function()
 		table.insert(branches_clean, clean_branch)
 	end
 
-    -- get unique branches
-    local branches_unique = {}
-    local branches_set = {}
-    for _, branch in ipairs(branches_clean) do
-        if not branches_set[branch] then
-            branches_set[branch] = true
-            table.insert(branches_unique, branch)
-        end
-    end
+	-- get unique branches
+	local branches_unique = {}
+	local branches_set = {}
+	for _, branch in ipairs(branches_clean) do
+		if not branches_set[branch] then
+			branches_set[branch] = true
+			table.insert(branches_unique, branch)
+		end
+	end
 
 	vim.fn.writefile(branches_unique, branch_list_file)
 
@@ -405,9 +407,11 @@ M.find_and_switch_branch = function()
 					local checkout_cmd = "git checkout " .. vim.fn.shellescape(branch_to_checkout)
 					local output = vim.fn.system(checkout_cmd)
 					if vim.v.shell_error == 0 then
-						vim.notify("Switched to branch: " .. branch_to_checkout, vim.log.levels.INFO)
+						vim.notify("Switched to branch: " .. branch_to_checkout,
+							vim.log.levels.INFO)
 					else
-						vim.notify("Failed to switch to branch: " .. branch_to_checkout, vim.log.levels.ERROR)
+						vim.notify("Failed to switch to branch: " .. branch_to_checkout,
+							vim.log.levels.ERROR)
 						vim.notify(output, vim.log.levels.ERROR)
 					end
 				else
@@ -415,9 +419,11 @@ M.find_and_switch_branch = function()
 					local create_cmd = "git checkout -b " .. vim.fn.shellescape(branch_to_checkout)
 					local output = vim.fn.system(create_cmd)
 					if vim.v.shell_error == 0 then
-						vim.notify("Created and switched to new branch: " .. branch_to_checkout, vim.log.levels.INFO)
+						vim.notify("Created and switched to new branch: " .. branch_to_checkout,
+							vim.log.levels.INFO)
 					else
-						vim.notify("Failed to create branch: " .. branch_to_checkout, vim.log.levels.ERROR)
+						vim.notify("Failed to create branch: " .. branch_to_checkout,
+							vim.log.levels.ERROR)
 						vim.notify(output, vim.log.levels.ERROR)
 					end
 				end
@@ -427,6 +433,43 @@ M.find_and_switch_branch = function()
 		end
 	})
 	vim.cmd('startinsert')
+end
+
+
+M.make_pair = function(open, close, opts)
+	opts = opts or {}
+	return function()
+		local line = api.nvim_get_current_line()
+		local col = fn.col('.') - 1
+		local next_char = line:sub(col + 1, col + 1)
+		local prev_char = line:sub(col, col)
+
+		-- Jump over if next char is the closer
+		if next_char == close then
+			return "<Right>"
+		end
+
+		-- Skip pairing quotes after word characters
+		if opts.skip_if_prev_word and prev_char:match("%w") then
+			return open
+		end
+
+		-- Insert pair and go left
+		return open .. close .. "<Left>"
+	end
+end
+
+M.make_closer = function(ch)
+	return function()
+		local line = api.nvim_get_current_line()
+		local col = fn.col('.') - 1
+		local next_char = line:sub(col + 1, col + 1)
+		if next_char == ch then
+			return "<Right>"
+		else
+			return ch
+		end
+	end
 end
 
 

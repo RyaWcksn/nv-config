@@ -77,3 +77,33 @@ vim.keymap.set({ 'n', 'v' }, '<leader>bb', utils.git_blame_current_line, { desc 
 vim.keymap.set('n', '<leader>ba', ":w <bar> %bd <bar> e# <bar> bd# <CR>", { desc = "Delete All But This Buffer" })
 vim.keymap.set('n', '<tab>', ":bn<CR>", { desc = "Next Buffer" })
 vim.keymap.set('n', '<s-tab>', ":bp<CR>", { desc = "Prev Buffer" })
+
+-- Autopairs
+local map_opts = { expr = true, noremap = true, silent = true }
+
+-- Openers
+vim.keymap.set("i", "(", utils.make_pair("(", ")"), map_opts)
+vim.keymap.set("i", "[", utils.make_pair("[", "]"), map_opts)
+vim.keymap.set("i", "{", utils.make_pair("{", "}"), map_opts)
+vim.keymap.set("i", '"', utils.make_pair('"', '"', { skip_if_prev_word = true }), map_opts)
+vim.keymap.set("i", "'", utils.make_pair("'", "'", { skip_if_prev_word = true }), map_opts)
+vim.keymap.set("i", "`", utils.make_pair("`", "`"), map_opts)
+
+-- Closers
+vim.keymap.set("i", ")", utils.make_closer(")"), map_opts)
+vim.keymap.set("i", "]", utils.make_closer("]"), map_opts)
+vim.keymap.set("i", "}", utils.make_closer("}"), map_opts)
+
+-- Optional: Backspace deletes empty pair
+vim.keymap.set("i", "<BS>", function()
+	local line = api.nvim_get_current_line()
+	local col = fn.col('.') - 1
+	if col < 1 then return "<BS>" end
+	local prev_char = line:sub(col, col)
+	local next_char = line:sub(col + 1, col + 1)
+	local pairs = { ["("] = ")", ["["] = "]", ["{"] = "}", ['"'] = '"', ["'"] = "'", ["`"] = "`" }
+	if pairs[prev_char] and next_char == pairs[prev_char] then
+		return "<BS><Del>"
+	end
+	return "<BS>"
+end, map_opts)
