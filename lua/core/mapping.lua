@@ -16,7 +16,10 @@ vim.keymap.set({ 'n' }, '<leader>kl', "zo", { desc = "Unfold" })
 vim.keymap.set('n', '<leader>s', ':update<CR> :source<CR>')
 vim.keymap.set('n', '<leader><leader>', ':write<CR>')
 vim.keymap.set('n', '<leader>q', ':quit<CR>')
+
+-- Open 
 vim.keymap.set('n', '<leader>oo', utils.open_file_tree, { desc = "Filetree (left narrow split)" })
+vim.keymap.set('n', '<leader>ot', utils.open_command, { desc = "Terminal" })
 
 -- Move from bottom to top
 vim.keymap.set("n", "J", "mzJ`z", opt)
@@ -54,7 +57,7 @@ local lazygit = function()
 end
 vim.keymap.set('n', '<leader>gg', lazygit, { desc = "Open lazygit" })
 vim.keymap.set({ 'n', 'v' }, '<leader>gb', utils.git_blame_current_line, { desc = "Git Blame current line" })
-vim.keymap.set('n', '<leader>fg', utils.find_and_switch_branch, { desc = "Find and switch git branch" })
+vim.keymap.set('n', '<leader>gl', utils.find_and_switch_branch, { desc = "Find and switch git branch" })
 
 
 -- Searching feature
@@ -66,8 +69,6 @@ end
 vim.keymap.set('n', '<leader>ff', search_file, { desc = "Search file" })
 vim.keymap.set('n', '<leader>fr', utils.search_and_replace, { desc = "Search and replace" })
 vim.keymap.set('n', '<leader>fw', utils.search_words_and_qflist, { desc = "Search words in codebase" })
-
--- vim.keymap.set('n', '<leader>gg', utils.open_command('lazygit'), { desc = "Open lazygit" })
 
 -- Buffer
 vim.keymap.set('n', '<leader>bl', utils.buffers_to_quickfix, { desc = "List all buffers in quickfix list" })
