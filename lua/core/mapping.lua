@@ -41,7 +41,7 @@ vim.keymap.set("i", "<S-Tab>", function()
 end, { expr = true, noremap = true })
 vim.keymap.set("i", "<CR>", function()
 	if vim.fn.pumvisible() == 1 then
-		vim.lsp.completion.get()
+		return "<C-y>"
 	else
 		return "<CR>"
 	end
