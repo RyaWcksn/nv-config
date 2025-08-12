@@ -17,7 +17,7 @@ vim.keymap.set('n', '<leader>s', ':update<CR> :source<CR>')
 vim.keymap.set('n', '<leader><leader>', ':write<CR>')
 vim.keymap.set('n', '<leader>q', ':quit<CR>')
 
--- Open 
+-- Open
 vim.keymap.set('n', '<leader>oo', utils.open_file_tree, { desc = "Filetree (left narrow split)" })
 vim.keymap.set('n', '<leader>ot', utils.open_command, { desc = "Terminal" })
 
@@ -93,17 +93,3 @@ vim.keymap.set("i", "`", utils.make_pair("`", "`"), map_opts)
 vim.keymap.set("i", ")", utils.make_closer(")"), map_opts)
 vim.keymap.set("i", "]", utils.make_closer("]"), map_opts)
 vim.keymap.set("i", "}", utils.make_closer("}"), map_opts)
-
--- Optional: Backspace deletes empty pair
-vim.keymap.set("i", "<BS>", function()
-	local line = api.nvim_get_current_line()
-	local col = fn.col('.') - 1
-	if col < 1 then return "<BS>" end
-	local prev_char = line:sub(col, col)
-	local next_char = line:sub(col + 1, col + 1)
-	local pairs = { ["("] = ")", ["["] = "]", ["{"] = "}", ['"'] = '"', ["'"] = "'", ["`"] = "`" }
-	if pairs[prev_char] and next_char == pairs[prev_char] then
-		return "<BS><Del>"
-	end
-	return "<BS>"
-end, map_opts)

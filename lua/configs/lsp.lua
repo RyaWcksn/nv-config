@@ -4,7 +4,8 @@ vim.lsp.enable({
 	"gopls",
 	"golangci_lint_ls",
 	"ts_ls",
-	"tailwindcss"
+	"tailwindcss",
+	"rust_analyzer"
 })
 
 local signs = { Error = "> ", Warn = "W ", Hint = "H ", Info = "I " }
@@ -19,7 +20,7 @@ local config = {
 		prefix = '>',
 	},
 	signs = true,
-	update_in_insert = false,
+	update_in_insert = true,
 	underline = true,
 	severity_sort = true,
 	float = {
@@ -59,29 +60,45 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', '<leader>lo', vim.lsp.buf.document_symbol, { desc = "Diagnostics" })
 		vim.keymap.set('n', '<leader>lq', vim.diagnostic.setqflist, { desc = "Diagnostics list" })
 
-		vim.o.omnifunc = "v:lua.vim.lsp.omnifunc"
+		-- vim.o.omnifunc = "v:lua.vim.lsp.omnifunc"
+		-- local function trigger_completion()
+		-- 	local col = vim.fn.col(".") - 1
+		-- 	if col >= 2 and not (vim.fn.pumvisible() == 1) then
+		-- 		vim.api.nvim_feedkeys(
+		-- 			vim.api.nvim_replace_termcodes("<C-x><C-o>", true, true, true),
+		-- 			"n",
+		-- 			false
+		-- 		)
+		-- 	end
+		-- end
+		--
+		-- vim.api.nvim_create_autocmd({ "TextChangedI", "TextChangedP" }, {
+		-- 	pattern = "*",
+		-- 	callback = trigger_completion,
+		-- })
 
-		local function trigger_completion()
-			local col = vim.fn.col(".") - 1
-			if col >= 2 and not (vim.fn.pumvisible() == 1) then
-				vim.api.nvim_feedkeys(
-					vim.api.nvim_replace_termcodes("<C-x><C-o>", true, true, true),
-					"n",
-					false
-				)
-			end
-		end
-
-		vim.api.nvim_create_autocmd({ "TextChangedI", "TextChangedP" }, {
-			pattern = "*",
-			callback = trigger_completion,
-		})
 		-- ========================
 		-- LSP Features per server capabilities
 		-- ========================
 		if client:supports_method('textDocument/completion') then
-			vim.opt.completeopt = { "menu", "menuone", "noselect" }
-			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+			vim.opt.completeopt = { "menu", "menuone", "noselect", 'noinsert', 'fuzzy', 'popup' }
+			vim.lsp.completion.enable(true, client.id, ev.buf, {
+				autotrigger = true,
+				convert = function(item)
+					if item.insertText then
+						return {
+							abbr = item.label,
+							word = item.insertText,
+						}
+					end
+					local sortKey = item.kind == 'Function' and '0' or '1'
+					return {
+						abbr = item.label:gsub('%b()', ''),
+						filterText = item.label:lower():gsub('%s+', ''),
+						sortText = sortKey .. (item.sortText or item.label)
+					}
+				end,
+			})
 		end
 
 		if client:supports_method('textDocument/inlayHint') then
