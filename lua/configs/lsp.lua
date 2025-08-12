@@ -61,27 +61,27 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', '<leader>lq', vim.diagnostic.setqflist, { desc = "Diagnostics list" })
 
 		-- vim.o.omnifunc = "v:lua.vim.lsp.omnifunc"
-		-- local function trigger_completion()
-		-- 	local col = vim.fn.col(".") - 1
-		-- 	if col >= 2 and not (vim.fn.pumvisible() == 1) then
-		-- 		vim.api.nvim_feedkeys(
-		-- 			vim.api.nvim_replace_termcodes("<C-x><C-o>", true, true, true),
-		-- 			"n",
-		-- 			false
-		-- 		)
-		-- 	end
-		-- end
-		--
-		-- vim.api.nvim_create_autocmd({ "TextChangedI", "TextChangedP" }, {
-		-- 	pattern = "*",
-		-- 	callback = trigger_completion,
-		-- })
+		local function trigger_completion()
+			local col = vim.fn.col(".") - 1
+			if col >= 2 and not (vim.fn.pumvisible() == 1) then
+				vim.api.nvim_feedkeys(
+					vim.api.nvim_replace_termcodes("<C-x><C-o>", true, true, true),
+					"i",
+					false
+				)
+			end
+		end
+
+		vim.api.nvim_create_autocmd({ "TextChangedI", "TextChangedP" }, {
+			pattern = "*",
+			callback = trigger_completion,
+		})
 
 		-- ========================
 		-- LSP Features per server capabilities
 		-- ========================
 		if client:supports_method('textDocument/completion') then
-			vim.opt.completeopt = { "menu", "menuone", "noselect", 'noinsert', 'fuzzy', 'popup' }
+			vim.opt.completeopt = { "menuone", "noselect", 'fuzzy', 'popup' }
 			vim.lsp.completion.enable(true, client.id, ev.buf, {
 				autotrigger = true,
 				convert = function(item)
