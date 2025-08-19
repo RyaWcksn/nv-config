@@ -5,6 +5,7 @@
   "workspace.checkThirdParty": false,
   "workspace.library": ["$VIMRUNTIME"],
     "diagnostics.disable": [
-        "param-type-mismatch"
+        "param-type-mismatch",
+        "assign-type-mismatch"
     ]
 }

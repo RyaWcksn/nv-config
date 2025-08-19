@@ -1,11 +1,18 @@
 local utils = require('utils.utils')
 local opt = { silent = false, noremap = true }
 
+-- Command mode
+vim.keymap.set('n', '<Leader>;', ':', opt)
+
 -- Window
 vim.keymap.set('n', '<leader>wk', "<c-w>k", { desc = "Switch Up" })
 vim.keymap.set('n', '<leader>wj', "<c-w>j", { desc = "Switch Down" })
 vim.keymap.set('n', '<leader>wh', "<c-w>h", { desc = "Switch Left" })
 vim.keymap.set('n', '<leader>wl', "<c-w>l", { desc = "Switch Right" })
+
+-- Scrolling
+vim.keymap.set('n', '<C-d>', '<C-d>zz')
+vim.keymap.set('n', '<C-u>', '<C-u>zz')
 
 -- Folding
 vim.keymap.set({ 'n' }, '<leader>kk', "zc", { desc = "Fold" })

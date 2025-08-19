@@ -9,7 +9,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.api.nvim_create_autocmd('TextYankPost', {
 	group = augroup,
-	callback = function(event)
+	callback = function()
 		vim.highlight.on_yank({ higroup = 'Visual', timeout = 200 })
 	end,
 	desc = "Add highlight on yank text"
@@ -32,7 +32,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 	pattern = "*.csv",
 
 	callback = function()
-		-- Only act if the file is a real buffer
 		if vim.bo.buftype ~= "" then return end
 
 		vim.wo.wrap = false
@@ -40,7 +39,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 		local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
-		-- Parse and pad each column
 		local split = function(str, sep)
 			local result = {}
 			for s in string.gmatch(str, "([^" .. sep .. "]+)") do

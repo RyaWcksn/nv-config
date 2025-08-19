@@ -37,12 +37,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(ev)
 		local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
 		vim.notify("LSP client attached: " .. client.name)
-		vim.o.updatetime = 250
+		vim.lsp.set_log_level(vim.log.levels.ERROR)
 
 		-- ========================
 		-- Diagnostics
 		-- ========================
-		vim.lsp.set_log_level(vim.log.levels.ERROR)
 
 		-- ========================
 		-- Keymaps
@@ -57,8 +56,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', '<leader>lL', vim.lsp.codelens.refresh, { desc = "Codelens Refresh" })
 		vim.keymap.set('n', '<leader>lr', vim.lsp.buf.rename, { desc = "Rename" })
 		vim.keymap.set('n', '<leader>lt', vim.diagnostic.setqflist, { desc = "Diagnostics" })
-		vim.keymap.set('n', '<leader>lo', vim.lsp.buf.document_symbol, { desc = "Diagnostics" })
-		vim.keymap.set('n', '<leader>lq', vim.diagnostic.setqflist, { desc = "Diagnostics list" })
+		vim.keymap.set('n', '<leader>lo', vim.lsp.buf.document_symbol, { desc = "Document Symbol" })
+		vim.keymap.set('n', '<C-k>', vim.diagnostic.open_float, { desc = "Open diagnostic float" })
 
 		-- vim.o.omnifunc = "v:lua.vim.lsp.omnifunc"
 		local function trigger_completion()
@@ -72,10 +71,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
 			end
 		end
 
-		vim.api.nvim_create_autocmd({ "TextChangedI", "TextChangedP" }, {
+		vim.api.nvim_create_autocmd({ 'TextChangedI', 'TextChangedP' }, {
 			pattern = "*",
 			callback = trigger_completion,
 		})
+
+		vim.lsp.document_color.enable()
 
 		-- ========================
 		-- LSP Features per server capabilities
