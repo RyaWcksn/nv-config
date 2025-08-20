@@ -100,3 +100,20 @@ vim.keymap.set("i", "`", utils.make_pair("`", "`"), map_opts)
 vim.keymap.set("i", ")", utils.make_closer(")"), map_opts)
 vim.keymap.set("i", "]", utils.make_closer("]"), map_opts)
 vim.keymap.set("i", "}", utils.make_closer("}"), map_opts)
+
+-- Notes keymaps
+vim.keymap.set("n", "<leader>nt", function()
+  utils.open_notes("todo")
+end, { desc = "Open Note [T]odo" })
+
+vim.keymap.set("n", "<leader>nj", function()
+  utils.open_notes("journal")
+end, { desc = "Open Note [J]ournal" })
+
+vim.keymap.set("n", "<leader>ni", function()
+  utils.open_notes("inspiration")
+end, { desc = "Open Note [I]nspiration" })
+
+vim.keymap.set("n", "<leader>nd", function()
+  utils.open_notes("done")
+end, { desc = "Open Note [D]one" })

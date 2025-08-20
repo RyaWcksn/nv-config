@@ -2,11 +2,15 @@ local M                   = {}
 local api                 = vim.api
 local fn                  = vim.fn
 
-M.create_floating_window  = function()
+M.create_floating_window  = function(opts)
+	opts = opts or {}
 	local max_height = vim.api.nvim_win_get_height(0)
 	local max_width = vim.api.nvim_win_get_width(0)
 	local height = math.floor(max_height * 0.8)
 	local width = math.floor(max_width * 0.8)
+	local title = opts.title or "Floating"
+	local border = opts.border or "rounded"
+	local style = opts.style or "minimal"
 
 	local buf = vim.api.nvim_create_buf(false, true)
 	local win = vim.api.nvim_open_win(buf, true, {
@@ -15,11 +19,72 @@ M.create_floating_window  = function()
 		width = width,
 		row = (max_height - height) / 2,
 		col = (max_width - width) / 2,
-		style = "minimal",
-		border = "rounded",
-		title = "Floating"
+		style = style,
+		border = border,
+		title = title,
 	})
 	return win
+end
+
+M.open_notes              = function(notes)
+	local path, name = "", ""
+	local case = {
+		["todo"] = function()
+			path = vim.fn.expand("~/notes/todo.md")
+			name = "todo"
+		end,
+		["inspiration"] = function()
+			path = vim.fn.expand("~/notes/inspiration.md")
+			name = "inspiration"
+		end,
+		["done"] = function()
+			path = vim.fn.expand("~/notes/done.md")
+			name = "done"
+		end,
+		["journal"] = function()
+			local notes_dir = vim.fn.expand("~/notes/journal")
+			local date = os.date("%y-%m-%d")
+			path = notes_dir .. "/" .. date .. ".md"
+			name = "journal"
+		end,
+	}
+
+	if case[notes] then
+		case[notes]()
+	else
+		case["done"]()
+	end
+
+	local dir = vim.fn.fnamemodify(path, ":h")
+
+	if vim.fn.isdirectory(dir) == 0 then
+		vim.fn.mkdir(dir, "p")
+	end
+
+	if vim.fn.filereadable(path) == 0 then
+		local f = io.open(path, "w")
+		if f then f:close() end
+	end
+
+	local opts = {
+		title = "Notes " .. name
+	}
+
+	M.create_floating_window(opts)
+
+	vim.api.nvim_command("edit " .. path)
+
+	if notes == "journal" then
+		local timestamp = "# " .. os.date("%H:%M:%S")
+
+		vim.api.nvim_put({ timestamp }, "l", true, true)
+	elseif notes ~= "done" then
+		vim.cmd("startinsert")
+	end
+
+	vim.api.nvim_set_option_value("filetype", "notesfloat", {
+		buf = 0
+	})
 end
 
 M.search_word             = function()
@@ -83,6 +148,9 @@ M.get_file                = function(callback)
 		end
 	})
 	vim.cmd('startinsert')
+	vim.api.nvim_set_option_value("filetype", "findfile", {
+		buf = 0
+	})
 end
 
 M.open_command            = function(cmd)
@@ -215,56 +283,6 @@ M.buffers_to_quickfix     = function()
 	vim.fn.setqflist(quickfix_list, 'r')
 	vim.cmd("copen") -- Open the quickfix list window
 	print("Buffers added to quickfix list.")
-end
-
-M.file_picker             = function()
-	vim.ui.input({ prompt = "Search filenames > " }, function(input)
-		if not input or input == "" then return end
-
-		local cmd = { "rg", "--files" }
-
-		vim.fn.setqflist({}, "r")
-
-		vim.fn.jobstart(cmd, {
-			cwd = vim.fn.getcwd(),
-			stdout_buffered = true,
-			on_stdout = function(_, data)
-				if not data then return end
-
-				local matches = {}
-				for _, filepath in ipairs(data) do
-					if filepath ~= "" and filepath:lower():find(input:lower(), 1, true) then
-						table.insert(matches, {
-							filename = filepath,
-							lnum = 1,
-							col = 1,
-							text = filepath,
-						})
-					end
-				end
-
-				if #matches > 0 then
-					vim.fn.setqflist(matches, "r")
-					vim.cmd("copen")
-					vim.api.nvim_create_autocmd("BufEnter", {
-						pattern = "*",
-						once = true,
-						callback = function()
-							-- Check if quickfix window is open, then close it
-							for _, win in ipairs(vim.api.nvim_list_wins()) do
-								if vim.fn.getwininfo(win)[1].quickfix == 1 then
-									vim.api.nvim_win_close(win, false)
-								end
-							end
-						end,
-					})
-				else
-					vim.notify("No matching files for: " .. input, vim.log.levels.INFO)
-				end
-			end,
-
-		})
-	end)
 end
 
 M.open_daily_note         = function()
@@ -468,6 +486,44 @@ M.make_closer = function(ch)
 			return "<Right>"
 		else
 			return ch
+		end
+	end
+end
+
+
+M.move_done_items = function()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+	local todo_lines = {}
+	local done_lines = {}
+
+	for _, line in ipairs(lines) do
+		if line:match("^%s*%- %[x%]") then
+			local timestamp = os.date("%Y-%m-%d %H:%M")
+			local done_line = line .. "  ✅ (" .. timestamp .. ")"
+			table.insert(done_lines, done_line)
+		else
+			table.insert(todo_lines, line)
+		end
+	end
+
+	if #done_lines > 0 then
+		vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, todo_lines)
+
+		local done_file = vim.fn.expand("~/notes/done.md")
+
+		local dir = vim.fn.fnamemodify(done_file, ":h")
+		if vim.fn.isdirectory(dir) == 0 then
+			vim.fn.mkdir(dir, "p")
+		end
+
+		local f = io.open(done_file, "a")
+		if f then
+			for _, l in ipairs(done_lines) do
+				f:write(l .. "\n")
+			end
+			f:close()
 		end
 	end
 end

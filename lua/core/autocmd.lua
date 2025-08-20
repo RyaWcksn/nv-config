@@ -1,7 +1,7 @@
 local augroup = vim.api.nvim_create_augroup('user_cmds', { clear = true })
 
 vim.api.nvim_create_autocmd('FileType', {
-	pattern = { 'help', 'man', 'qf' },
+	pattern = { 'help', 'man', 'qf', 'notesfloat', 'findfile' },
 	group = augroup,
 	desc = 'Use q to close the window',
 	command = 'nnoremap <buffer> q <cmd>quit<cr>'
@@ -71,4 +71,24 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 		vim.bo.modified = false -- Don't mark buffer as modified
 	end,
 	desc = "Pretty print CSV"
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "notesfloat" },
+	callback = function()
+		vim.opt_local.winbar = nil
+		vim.opt_local.laststatus = 0
+		vim.opt_local.number = false
+		vim.opt_local.relativenumber = false
+		vim.opt_local.completefunc = ""
+		vim.opt_local.omnifunc = ""
+	end,
+})
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+	pattern = "todo.md",
+	callback = function()
+		local utils = require('utils.utils')
+		utils.move_done_items()
+	end
 })
