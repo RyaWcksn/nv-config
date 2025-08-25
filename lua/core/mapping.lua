@@ -101,6 +101,11 @@ vim.keymap.set("i", ")", utils.make_closer(")"), map_opts)
 vim.keymap.set("i", "]", utils.make_closer("]"), map_opts)
 vim.keymap.set("i", "}", utils.make_closer("}"), map_opts)
 
+-- Replace % with M
+vim.keymap.set("n", "mm", "%")
+vim.keymap.set("x", "m", "%")
+vim.keymap.set("o", "m", "%")
+
 -- Notes keymaps
 vim.keymap.set("n", "<leader>nt", function()
   utils.open_notes("todo")

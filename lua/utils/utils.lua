@@ -85,6 +85,15 @@ M.open_notes              = function(notes)
 	vim.api.nvim_set_option_value("filetype", "notesfloat", {
 		buf = 0
 	})
+	buf = vim.api.nvim_get_current_buf()
+	vim.api.nvim_create_autocmd("WinClosed", {
+		once = true,
+		callback = function(args)
+			if tonumber(args.match) == win and vim.api.nvim_buf_is_valid(buf) then
+				vim.api.nvim_buf_delete(buf, { force = true })
+			end
+		end,
+	})
 end
 
 M.search_word             = function()

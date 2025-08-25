@@ -4,6 +4,8 @@ This is a lightweight and fast Neovim configuration, tailored for performance an
 
 ## 🚀 Startup Time
 
+####
+
 The configuration is optimized for a fast startup time.
 
 ```
@@ -19,9 +21,9 @@ The total startup time is approximately **60ms**.
 
 This configuration uses a minimal set of plugins, managed by `vim.pack.add`.
 
-| Plugin                                               | Description                               |
-| ---------------------------------------------------- | ----------------------------------------- |
-| [folke/which-key.nvim](https://github.com/folke/which-key.nvim) | A popup for keybindings.                  |
+| Plugin                                                                                | Description                       |
+| ------------------------------------------------------------------------------------- | --------------------------------- |
+| [folke/which-key.nvim](https://github.com/folke/which-key.nvim)                       | A popup for keybindings.          |
 | [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | For syntax highlighting and more. |
 
 ## 📂 File & Folder Structure
@@ -65,36 +67,36 @@ The configuration is structured in a modular way, making it easy to maintain and
 
 ### Root Directory
 
-*   `.luarc.json`: Configuration for the Lua language server.
-*   `init.lua`: The entry point of the configuration.
-*   `startuptime.log`: Log file for startup time analysis.
+- `.luarc.json`: Configuration for the Lua language server.
+- `init.lua`: The entry point of the configuration.
+- `startuptime.log`: Log file for startup time analysis.
 
 ### `colors/`
 
-*   `ayu.lua`: The `ayu` colorscheme.
+- `ayu.lua`: The `ayu` colorscheme.
 
 ### `lsp/`
 
-*   This directory contains the configurations for the different language servers.
+- This directory contains the configurations for the different language servers.
 
 ### `lua/`
 
-*   **`configs/`**: This directory contains the configurations for the plugins and other parts of Neovim.
-    *   `init.lua`: Loads all the configurations in this directory.
-    *   `lsp.lua`: LSP configuration.
-    *   `pack.lua`: Plugin management.
-    *   `treesitter.lua`: Treesitter configuration.
-    *   `whichkey.lua`: Which-key configuration.
-*   **`core/`**: This directory contains the core Neovim configuration.
-    *   `init.lua`: Loads all the core configurations.
-    *   `autocmd.lua`: Autocommands.
-    *   `commands.lua`: Custom commands.
-    *   `fold.lua`: Folding configuration.
-    *   `mapping.lua`: Key mappings.
-    *   `netrw.lua`: Netrw configuration.
-    *   `option.lua`: Neovim options.
-    *   `statusline.lua`: Statusline configuration.
-    *   `winbar.lua`: Winbar configuration.
-*   **`utils/`**: This directory contains utility functions.
-    *   `init.lua`: Loads the utility modules.
-    *   `utils.lua`: Utility functions.
+- **`configs/`**: This directory contains the configurations for the plugins and other parts of Neovim.
+  - `init.lua`: Loads all the configurations in this directory.
+  - `lsp.lua`: LSP configuration.
+  - `pack.lua`: Plugin management.
+  - `treesitter.lua`: Treesitter configuration.
+  - `whichkey.lua`: Which-key configuration.
+- **`core/`**: This directory contains the core Neovim configuration.
+  - `init.lua`: Loads all the core configurations.
+  - `autocmd.lua`: Autocommands.
+  - `commands.lua`: Custom commands.
+  - `fold.lua`: Folding configuration.
+  - `mapping.lua`: Key mappings.
+  - `netrw.lua`: Netrw configuration.
+  - `option.lua`: Neovim options.
+  - `statusline.lua`: Statusline configuration.
+  - `winbar.lua`: Winbar configuration.
+- **`utils/`**: This directory contains utility functions.
+  - `init.lua`: Loads the utility modules.
+  - `utils.lua`: Utility functions.

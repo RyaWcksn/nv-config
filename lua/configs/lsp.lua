@@ -58,16 +58,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', '<leader>lt', vim.diagnostic.setqflist, { desc = "Diagnostics" })
 		vim.keymap.set('n', '<leader>lo', vim.lsp.buf.document_symbol, { desc = "Document Symbol" })
 		vim.keymap.set('n', '<C-k>', vim.diagnostic.open_float, { desc = "Open diagnostic float" })
-
-		-- vim.o.omnifunc = "v:lua.vim.lsp.omnifunc"
 		local function trigger_completion()
 			local col = vim.fn.col(".") - 1
 			if col >= 2 and not (vim.fn.pumvisible() == 1) then
-				vim.api.nvim_feedkeys(
-					vim.api.nvim_replace_termcodes("<C-x><C-o>", true, true, true),
-					"i",
-					false
-				)
+				vim.lsp.completion.get()
 			end
 		end
 
