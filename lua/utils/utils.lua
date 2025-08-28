@@ -23,7 +23,16 @@ M.create_floating_window  = function(opts)
 		border = border,
 		title = title,
 	})
-	return win
+
+	vim.api.nvim_create_autocmd("WinClosed", {
+		once = true,
+		callback = function()
+			if vim.api.nvim_buf_is_valid(buf) then
+				vim.api.nvim_buf_delete(buf, { force = true })
+			end
+		end,
+	})
+	return win, buf
 end
 
 M.open_notes              = function(notes)
@@ -129,13 +138,19 @@ M.search_word             = function()
 			else
 				vim.notify("No matches found", vim.log.levels.INFO)
 			end
+			if vim.api.nvim_win_is_valid(win) then
+				vim.api.nvim_win_close(win, true)
+			end
+			if vim.api.nvim_buf_is_valid(buf) then
+				vim.api.nvim_buf_delete(buf, { force = true })
+			end
 		end
 	})
 	vim.cmd('startinsert')
 end
 
 M.get_file                = function(callback)
-	local win = M.create_floating_window()
+	local win, buf = M.create_floating_window()
 	local tmpfile = vim.fn.tempname()
 
 	vim.cmd(string.format(
@@ -143,13 +158,20 @@ M.get_file                = function(callback)
 		vim.fn.shellescape(tmpfile)
 	))
 
+	vim.bo[buf].buflisted = false
+
 	vim.api.nvim_create_autocmd("TermClose", {
 		once = true,
 		callback = function()
 			local result = vim.fn.readfile(tmpfile)[1]
 			os.remove(tmpfile)
 			if result and callback then
-				vim.api.nvim_win_close(win, true)
+				if vim.api.nvim_win_is_valid(win) then
+					vim.api.nvim_win_close(win, true)
+				end
+				if vim.api.nvim_buf_is_valid(buf) then
+					vim.api.nvim_buf_delete(buf, { force = true })
+				end
 				vim.schedule(function()
 					callback(result)
 				end)

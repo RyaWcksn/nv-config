@@ -33,15 +33,9 @@ local config = {
 vim.diagnostic.config(config)
 
 vim.api.nvim_create_autocmd('LspAttach', {
-	once = true,
 	callback = function(ev)
 		local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
-		vim.notify("LSP client attached: " .. client.name)
 		vim.lsp.set_log_level(vim.log.levels.ERROR)
-
-		-- ========================
-		-- Diagnostics
-		-- ========================
 
 		-- ========================
 		-- Keymaps
@@ -58,17 +52,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', '<leader>lt', vim.diagnostic.setqflist, { desc = "Diagnostics" })
 		vim.keymap.set('n', '<leader>lo', vim.lsp.buf.document_symbol, { desc = "Document Symbol" })
 		vim.keymap.set('n', '<C-k>', vim.diagnostic.open_float, { desc = "Open diagnostic float" })
-		local function trigger_completion()
-			local col = vim.fn.col(".") - 1
-			if col >= 2 and not (vim.fn.pumvisible() == 1) then
-				vim.lsp.completion.get()
-			end
-		end
-
-		vim.api.nvim_create_autocmd({ 'TextChangedI', 'TextChangedP' }, {
-			pattern = "*",
-			callback = trigger_completion,
-		})
 
 		vim.lsp.document_color.enable()
 
@@ -76,24 +59,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		-- LSP Features per server capabilities
 		-- ========================
 		if client:supports_method('textDocument/completion') then
-			vim.opt.completeopt = { "menuone", "noselect", 'fuzzy', 'popup' }
-			vim.lsp.completion.enable(true, client.id, ev.buf, {
-				autotrigger = true,
-				convert = function(item)
-					if item.insertText then
-						return {
-							abbr = item.label,
-							word = item.insertText,
-						}
-					end
-					local sortKey = item.kind == 'Function' and '0' or '1'
-					return {
-						abbr = item.label:gsub('%b()', ''),
-						filterText = item.label:lower():gsub('%s+', ''),
-						sortText = sortKey .. (item.sortText or item.label)
-					}
-				end,
-			})
+			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
 		end
 
 		if client:supports_method('textDocument/inlayHint') then
