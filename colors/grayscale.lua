@@ -1,27 +1,29 @@
 local c = {
-	bg          = "#0B0E14",
-	fg          = "#c9c7be",
-	cursor      = "#2b2e34",
-	cursor_text = "#D9D7CE",
+	bg = "#0B0E0B",
+	fg = "#C9C9C9",
+	cursor = "#2B2B2B",
+	cursor_text = "#E0E0E0",
 
-	color0      = "#0B0E14",
-	color1      = "#c9c7be",
-	color2      = "#AAD84C",
-	color3      = "#56c3f9",
-	color4      = "#F07174",
-	color5      = "#FFB454",
-	color6      = "#FFB454",
-	color7      = "#c9c7be",
 
-	color8      = "#2b2e34",
-	color9      = "#c9c7be",
-	color10     = "#AAD84C",
-	color11     = "#56c3f9",
-	color12     = "#F07174",
-	color13     = "#FFB454",
-	color14     = "#FFB454",
-	color15     = "#E6E1CF",
-	color16     = "#CBA6F7",
+	color0 = "#0B0E0B",
+	color1 = "#A0A0A0",
+	color2 = "#B0B0B0",
+	color3 = "#C0C0C0",
+	color4 = "#D0D0D0",
+	color5 = "#E0E0E0",
+	color6 = "#F0F0F0",
+	color7 = "#C9C9C9",
+
+
+	color8 = "#2B2B2B",
+	color9 = "#A0A0A0",
+	color10 = "#B0B0B0",
+	color11 = "#C0C0C0",
+	color12 = "#D0D0D0",
+	color13 = "#E0E0E0",
+	color14 = "#F0F0F0",
+	color15 = "#F5F5F5",
+	color16 = "#FFFFFF",
 }
 
 local function hi(group, fg, bg, style)
@@ -34,7 +36,7 @@ end
 
 vim.cmd("highlight clear")
 vim.cmd("set termguicolors")
-vim.g.colors_name = "neko"
+vim.g.colors_name = "grayscale"
 
 hi("Normal", c.fg, c.bg)
 hi("Cursor", c.cursor_text, c.cursor, "bold")
