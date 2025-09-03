@@ -11,3 +11,5 @@ vim.o.winborder = "rounded"
 vim.g.mapleader = " "
 vim.o.undofile = true
 vim.o.pumheight = 10
+vim.o.wildmenu = true
+vim.o.wildmode = "longest:full,full"

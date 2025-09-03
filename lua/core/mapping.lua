@@ -15,9 +15,18 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 
 -- Folding
-vim.keymap.set({ 'n' }, '<leader>kk', "zc", { desc = "Fold" })
-vim.keymap.set({ 'n' }, '<leader>kh', "zR", { desc = "Unfold all" })
-vim.keymap.set({ 'n' }, '<leader>kl', "zo", { desc = "Unfold" })
+-- vim.keymap.set({ 'n' }, '<leader>kk', "zc", { desc = "Fold" })
+vim.keymap.set("n", "<leader>kk", function()
+	local linenr = vim.fn.line(".")
+	-- If there's no fold to be opened/closed, do nothing.
+	if vim.fn.foldlevel(linenr) == 0 then
+		return
+	end
+
+	-- Open recursively if closed, close if open.
+	local cmd = vim.fn.foldclosed(linenr) == -1 and "zc" or "zO"
+	vim.cmd("normal! " .. cmd)
+end, { silent = true, desc = "Folds: Toggle" })
 
 -- Basic
 vim.keymap.set('n', '<leader>s', ':update<CR> :source<CR>')
@@ -108,17 +117,17 @@ vim.keymap.set("o", "m", "%")
 
 -- Notes keymaps
 vim.keymap.set("n", "<leader>nt", function()
-  utils.open_notes("todo")
+	utils.open_notes("todo")
 end, { desc = "Open Note [T]odo" })
 
 vim.keymap.set("n", "<leader>nj", function()
-  utils.open_notes("journal")
+	utils.open_notes("journal")
 end, { desc = "Open Note [J]ournal" })
 
 vim.keymap.set("n", "<leader>ni", function()
-  utils.open_notes("inspiration")
+	utils.open_notes("inspiration")
 end, { desc = "Open Note [I]nspiration" })
 
 vim.keymap.set("n", "<leader>nd", function()
-  utils.open_notes("done")
+	utils.open_notes("done")
 end, { desc = "Open Note [D]one" })
