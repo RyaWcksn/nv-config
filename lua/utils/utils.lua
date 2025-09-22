@@ -2,6 +2,30 @@ local M                   = {}
 local api                 = vim.api
 local fn                  = vim.fn
 
+M.jump_arg                = function(direction)
+	local line = vim.fn.getline(".")
+	local col = vim.fn.col(".")
+	if direction == "next" then
+		-- look ahead for , or )
+		local after = line:sub(col + 1)
+		local next_pos = after:find("[,)]")
+		if next_pos then
+			vim.fn.cursor(0, col + next_pos + 1)
+			return true
+		end
+	elseif direction == "prev" then
+		-- look backward for , or (
+		local before = line:sub(1, col - 1)
+		local rev_pos = before:reverse():find("[,(]")
+		if rev_pos then
+			local new_col = col - rev_pos
+			vim.fn.cursor(0, new_col + 1)
+			return true
+		end
+	end
+	return false
+end
+
 M.create_floating_window  = function(opts)
 	opts = opts or {}
 	local max_height = vim.api.nvim_win_get_height(0)
@@ -152,7 +176,6 @@ end
 M.get_file                = function(callback)
 	local win, buf = M.create_floating_window()
 	local tmpfile = vim.fn.tempname()
-
 	vim.cmd(string.format(
 		"terminal fzf --preview 'cat {}' > %s",
 		vim.fn.shellescape(tmpfile)

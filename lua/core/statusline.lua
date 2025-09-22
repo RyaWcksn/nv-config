@@ -114,6 +114,7 @@ local statusline_filetype_exclude = {
 	"Avante",
 	"AvanteSelectedFiles",
 	"qf",
+	"prompt",
 }
 
 local function hide_statusline_in_netrw()

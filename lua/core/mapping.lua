@@ -47,6 +47,16 @@ vim.keymap.set("n", "Y", "y$", opt)
 vim.keymap.set('n', '<C-l>', ":cnext<CR>", opt)
 vim.keymap.set('n', '<C-h>', ":cprev<CR>", opt)
 
+-- Search
+vim.keymap.set('c', '<Tab>', function()
+	if vim.fn.getcmdtype() == "/" or vim.fn.getcmdtype() == "?" then return '<CR>/<c-r>/' end
+	return '<c-z>'
+end, { expr = true, remap = true })
+vim.keymap.set('c', '<S-Tab>', function()
+	if vim.fn.getcmdtype() == "/" or vim.fn.getcmdtype() == "?" then return '<CR>?<c-r>/' end
+	return '<S-Tab>'
+end, { expr = true, remap = true })
+
 -- Autocompletion
 vim.keymap.set("i", "<Tab>", function()
 	return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>"
@@ -55,6 +65,7 @@ end, { expr = true, noremap = true })
 vim.keymap.set("i", "<S-Tab>", function()
 	return vim.fn.pumvisible() == 1 and "<C-p>" or "<S-Tab>"
 end, { expr = true, noremap = true })
+
 vim.keymap.set("i", "<CR>", function()
 	if vim.fn.pumvisible() == 1 then
 		return "<C-y>"
@@ -82,9 +93,19 @@ local search_file = function()
 		vim.cmd("e " .. vim.fn.fnameescape(selected_file))
 	end)
 end
+local search_word = function()
+	local query
+	vim.ui.input({ prompt = "Keyword = " }, function(input)
+		query = input
+	end)
+
+	vim.cmd('vimgrep /' .. query .. '/ **/*')
+	vim.cmd('copen')
+end
 vim.keymap.set('n', '<leader>ff', search_file, { desc = "Search file" })
 vim.keymap.set('n', '<leader>fr', utils.search_and_replace, { desc = "Search and replace" })
-vim.keymap.set('n', '<leader>fw', utils.search_words_and_qflist, { desc = "Search words in codebase" })
+vim.keymap.set('n', '<leader>fw', search_word, { desc = "Search words in codebase" })
+vim.keymap.set('n', '<leader>fa', ':find *', { desc = "Search", remap = true })
 
 -- Buffer
 vim.keymap.set('n', '<leader>bl', utils.buffers_to_quickfix, { desc = "List all buffers in quickfix list" })
@@ -93,6 +114,16 @@ vim.keymap.set({ 'n', 'v' }, '<leader>bb', utils.git_blame_current_line, { desc 
 vim.keymap.set('n', '<leader>ba', ":w <bar> %bd <bar> e# <bar> bd# <CR>", { desc = "Delete All But This Buffer" })
 vim.keymap.set('n', '<tab>', ":bn<CR>", { desc = "Next Buffer" })
 vim.keymap.set('n', '<s-tab>', ":bp<CR>", { desc = "Prev Buffer" })
+
+-- searching
+vim.keymap.set('c', '<Tab>', function()
+	if vim.fn.getcmdtype() == "/" or vim.fn.getcmdtype() == "?" then return '<CR>/<c-r>/' end
+	return '<c-z>'
+end, { expr = true, remap = true })
+vim.keymap.set('c', '<S-Tab>', function()
+	if vim.fn.getcmdtype() == "/" or vim.fn.getcmdtype() == "?" then return '<CR>?<c-r>/' end
+	return '<S-Tab>'
+end, { expr = true, remap = true })
 
 -- Autopairs
 local map_opts = { expr = true, noremap = true, silent = true }
@@ -131,3 +162,5 @@ end, { desc = "Open Note [I]nspiration" })
 vim.keymap.set("n", "<leader>nd", function()
 	utils.open_notes("done")
 end, { desc = "Open Note [D]one" })
+
+-- Debug

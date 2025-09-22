@@ -5,7 +5,8 @@ local winbar_filetype_exclude = {
 	"AvanteInput",
 	"Avante",
 	"AvanteSelectedFiles",
-	"qf"
+	"qf",
+	"prompt",
 }
 
 

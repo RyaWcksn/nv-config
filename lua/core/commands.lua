@@ -61,3 +61,26 @@ vim.api.nvim_create_autocmd("FileType", {
 		})
 	end
 })
+
+if vim.fn.executable('sudo') then
+	vim.api.nvim_create_user_command('W', 'silent! write !sudo tee % >/dev/null', {
+		force = true,
+	})
+end
+
+vim.api.nvim_create_user_command('GB',
+	function(opts)
+		path = vim.fn.shellescape(vim.fn.expand('%:p:h'))
+		file = vim.fn.expand('%:t')
+		cmd = 'git -C ' .. path .. ' blame -L ' .. opts.line1 .. ',' .. opts.line2 .. ' ' .. file
+		syslist = vim.fn.systemlist(cmd)
+		result = vim.fn.join(syslist, '\n')
+		vim.api.nvim_echo({ { result }, { '' } }, false, {})
+	end,
+	{
+		desc = 'Portable git blame',
+		force = true,
+		range = true,
+		nargs = 0
+	}
+)
