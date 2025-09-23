@@ -32,7 +32,7 @@ M.setup = function()
 	vim.keymap.set("n", "<leader>db", function() require("dap").list_breakpoints() end, { desc = "List breakpoints" })
 	local widgets = require("dap.ui.widgets")
 	local scopes = widgets.sidebar(widgets.scopes, {}, "vsplit")
-	local frames = widgets.sidebar(widgets.frames, { height = 10 }, "belowright split")
+	local frames = widgets.sidebar(widgets.frames, { height = 10, width = 10 }, "belowright split")
 	local threads = widgets.sidebar(widgets.threads, {}, "right")
 	local sessions = widgets.sidebar(widgets.sessions, {}, "right")
 	local repl = require("dap.repl")
@@ -96,6 +96,18 @@ M.setup = function()
 			name = "Debug",
 			request = "launch",
 			program = "${file}"
+		},
+		{
+			type = "delve",
+			name = "Debug Workspace",
+			request = "launch",
+			program = "${workspaceFolder}"
+		},
+		{
+			type = "delve",
+			name = "Debug Relative",
+			request = "launch",
+			program = "./${relativeFileDirname}"
 		},
 		{
 			type = "delve",
