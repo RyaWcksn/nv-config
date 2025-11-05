@@ -73,19 +73,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 	desc = "Pretty print CSV"
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "markdown", "notesfloat" },
-	callback = function()
-		vim.cmd("LspStop")
-		vim.opt_local.winbar = nil
-		vim.opt_local.laststatus = 0
-		vim.opt_local.number = false
-		vim.opt_local.relativenumber = false
-		vim.opt_local.completefunc = ""
-		vim.opt_local.omnifunc = ""
-	end,
-})
-
 vim.api.nvim_create_autocmd("BufWritePost", {
 	pattern = "todo.md",
 	callback = function()

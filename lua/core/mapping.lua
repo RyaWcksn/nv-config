@@ -13,6 +13,8 @@ vim.keymap.set('n', '<leader>wl', "<c-w>l", { desc = "Switch Right" })
 -- Scrolling
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
+vim.keymap.set('n', 'n', 'nzzzv')
+vim.keymap.set('n', 'N', 'Nzzzv')
 
 -- Folding
 -- vim.keymap.set({ 'n' }, '<leader>kk', "zc", { desc = "Fold" })
@@ -102,10 +104,10 @@ local search_word = function()
 	vim.cmd('vimgrep /' .. query .. '/ **/*')
 	vim.cmd('copen')
 end
-vim.keymap.set('n', '<leader>ff', search_file, { desc = "Search file" })
+vim.keymap.set('n', '<leader>ff', ":find ", { desc = "Search file" })
 vim.keymap.set('n', '<leader>fr', utils.search_and_replace, { desc = "Search and replace" })
 vim.keymap.set('n', '<leader>fw', search_word, { desc = "Search words in codebase" })
-vim.keymap.set('n', '<leader>fa', ':find *', { desc = "Search", remap = true })
+vim.keymap.set('n', '<leader>fa', ':find *<TAB>', { desc = "Search", remap = true })
 
 -- Buffer
 vim.keymap.set('n', '<leader>bl', utils.buffers_to_quickfix, { desc = "List all buffers in quickfix list" })

@@ -5,7 +5,8 @@ vim.lsp.enable({
 	"golangci_lint_ls",
 	"ts_ls",
 	"tailwindcss",
-	"rust_analyzer"
+	"rust_analyzer",
+	"dartls"
 })
 
 local signs = { Error = "> ", Warn = "W ", Hint = "H ", Info = "I " }
@@ -61,13 +62,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
 			end
 		end
 
-
 		vim.api.nvim_create_autocmd({ 'TextChangedI', 'TextChangedP' }, {
 			pattern = "*",
 			callback = trigger_completion,
 		})
 
-		-- ========================
+		-- -- ========================
 		-- LSP Features per server capabilities
 		-- ========================
 		if client:supports_method('textDocument/completion') then

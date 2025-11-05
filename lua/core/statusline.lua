@@ -1,27 +1,8 @@
+Statusline = {}
+
 local function mode()
-	return ' 有 '
+	return '%#Normal# 有 '
 end
-
-local function filepath()
-	local fpath = vim.fn.fnamemodify(vim.fn.expand "%", ":~:.:h")
-	if fpath == "" or fpath == "." then
-		return " "
-	end
-
-	return string.format(" %%<%s/", fpath)
-end
-
-local function filename()
-	local fname = vim.fn.expand "%:t"
-	if fname == "" then
-		return ""
-	end
-	if vim.api.nvim_get_option_value('modified', { buf = 0 }) == 1 then
-		fname = fname .. "*"
-	end
-	return fname .. " "
-end
-
 
 local function lsp()
 	local count = {}
@@ -42,16 +23,16 @@ local function lsp()
 	local info = ""
 
 	if count["errors"] ~= 0 then
-		errors = " %#Normal#ERR [" .. count["errors"] .. "]"
+		errors = " E [" .. count["errors"] .. "]"
 	end
 	if count["warnings"] ~= 0 then
-		warnings = " %#Normal#WARN [" .. count["warnings"] .. "]"
+		warnings = " W [" .. count["warnings"] .. "]"
 	end
 	if count["hints"] ~= 0 then
-		hints = " %#Normal#HINT [" .. count["hints"] .. "]"
+		hints = " H [" .. count["hints"] .. "]"
 	end
 	if count["info"] ~= 0 then
-		info = " %#Normal#INFO [" .. count["info"] .. "]"
+		info = " I [" .. count["info"] .. "]"
 	end
 
 
@@ -63,49 +44,64 @@ local function lsp_servers()
 	if not clients or #clients == 0 then
 		return 'No Active Lsp'
 	end
-	local names = {}
-	for _, client in ipairs(clients) do
-		table.insert(names, client.name)
+	return "[LSP]"
+end
+
+local function git_branch()
+	local branch = vim.fn.system("git branch --show-current 2>/dev/null | tr -d '\n'")
+	if branch ~= "" then
+		local result = string.format(" [%s] ", branch)
+		return result
 	end
-	return string.format(" LSP [ %s ]", table.concat(names, ', '))
+	return ""
 end
 
-local function get_git_branch()
-	local handle = io.popen('git rev-parse --abbrev-ref HEAD 2>/dev/null')
-	local result = handle:read('*l')
-	handle:close()
-	result = string.format(" [%s] ", result)
-	return result or '!git'
+local function filepath()
+	local fpath = vim.fn.fnamemodify(vim.fn.expand "%", ":~:.:h")
+
+	if fpath == "" or fpath == "." then
+		return ""
+	end
+
+	return string.format("%%<%s/", fpath)
 end
 
-local function get_project_name()
-	-- Get the current working directory (CWD)
-	local cwd = vim.fn.getcwd()
-	-- Extract the last part of the path (the project name)
-	return vim.fn.fnamemodify(cwd, ":t")
-end
-
-local function statusbar_exec(ev)
-	local statusline = {
-		"%#Normal#",
+function Statusline.active()
+	return table.concat {
 		mode(),
-		get_git_branch(),
-		filepath() .. filename() .. "%r",
-		"%=%#Extra#",
-		"%#Normal#",
+		"[", filepath(), "%t] ",
 		lsp_servers(),
 		lsp(),
-		get_project_name(),
+		"%=",
+		git_branch(),
 	}
-	vim.o.statusline = table.concat(statusline, '')
 end
 
-vim.api.nvim_create_autocmd({ "DiagnosticChanged", "VimEnter", "BufWinEnter", "LspAttach" }, {
-	callback = function(ev)
-		statusbar_exec(ev)
-	end
-})
+function Statusline.inactive()
+	return " %t"
+end
 
+local function setup_statusline()
+	local group = vim.api.nvim_create_augroup("Statusline", { clear = true })
+
+	vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+		group = group,
+		desc = "Activate statusline on focus",
+		callback = function()
+			vim.opt_local.statusline = "%!v:lua.Statusline.active()"
+		end,
+	})
+
+	vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+		group = group,
+		desc = "Deactivate statusline when unfocused",
+		callback = function()
+			vim.opt_local.statusline = "%!v:lua.Statusline.inactive()"
+		end,
+	})
+end
+
+setup_statusline()
 
 local statusline_filetype_exclude = {
 	"help",
@@ -115,17 +111,17 @@ local statusline_filetype_exclude = {
 	"AvanteSelectedFiles",
 	"qf",
 	"prompt",
+	"netrw"
 }
 
 local function hide_statusline_in_netrw()
 	if vim.tbl_contains(statusline_filetype_exclude, vim.bo.filetype) then
-		vim.opt.laststatus = 0
+		vim.opt_local.laststatus = 0
 		return
 	end
-	vim.opt.laststatus = 2 -- Show statusline for other buffers
+	vim.opt_local.laststatus = 2 -- Show statusline for other buffers
 end
 
--- Auto command to toggle statusline dynamically
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	callback = hide_statusline_in_netrw,
 })

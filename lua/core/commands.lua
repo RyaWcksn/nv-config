@@ -68,19 +68,14 @@ if vim.fn.executable('sudo') then
 	})
 end
 
-vim.api.nvim_create_user_command('GB',
+vim.api.nvim_create_user_command(
+	'Search',
 	function(opts)
-		path = vim.fn.shellescape(vim.fn.expand('%:p:h'))
-		file = vim.fn.expand('%:t')
-		cmd = 'git -C ' .. path .. ' blame -L ' .. opts.line1 .. ',' .. opts.line2 .. ' ' .. file
-		syslist = vim.fn.systemlist(cmd)
-		result = vim.fn.join(syslist, '\n')
-		vim.api.nvim_echo({ { result }, { '' } }, false, {})
+		vim.cmd('silent grep! ' .. opts.args)
+		vim.cmd('copen')
 	end,
 	{
-		desc = 'Portable git blame',
-		force = true,
-		range = true,
-		nargs = 0
+		nargs = '+',
+		desc = 'Find in project (using rg) and open quickfix list',
 	}
 )

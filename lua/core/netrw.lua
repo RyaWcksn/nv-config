@@ -129,6 +129,6 @@ vim.api.nvim_create_autocmd('FileType', {
 			}
 		end
 		-- vim.opt_local.winbar = WinBarNetRW()
-		vim.opt_local.statusline = WinBarNetRW()
+		vim.opt_local.statusline = " %t"
 	end
 })
