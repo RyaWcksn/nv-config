@@ -6,7 +6,9 @@ vim.lsp.enable({
 	"ts_ls",
 	"tailwindcss",
 	"rust_analyzer",
-	"dartls"
+	"dartls",
+	"clangd",
+	"tinymist"
 })
 
 local signs = { Error = "> ", Warn = "W ", Hint = "H ", Info = "I " }
