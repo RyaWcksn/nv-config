@@ -55,6 +55,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', '<leader>lt', vim.diagnostic.setqflist, { desc = "Diagnostics" })
 		vim.keymap.set('n', '<leader>lo', vim.lsp.buf.document_symbol, { desc = "Document Symbol" })
 		vim.keymap.set('n', '<C-k>', vim.diagnostic.open_float, { desc = "Open diagnostic float" })
+		vim.keymap.set('i', '<C-j>', vim.lsp.buf.signature_help, { desc = "Open diagnostic float" })
 		vim.lsp.document_color.enable()
 
 		local function trigger_completion()
