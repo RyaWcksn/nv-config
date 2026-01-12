@@ -8,7 +8,8 @@ vim.lsp.enable({
 	"rust_analyzer",
 	"dartls",
 	"clangd",
-	"tinymist"
+	"tinymist",
+	"sqls"
 })
 
 local signs = { Error = "> ", Warn = "W ", Hint = "H ", Info = "I " }
