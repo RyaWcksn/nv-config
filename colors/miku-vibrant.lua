@@ -46,9 +46,9 @@ set_hl(0, "Identifier", { fg = palette.base05 })
 set_hl(0, "Operator", { fg = palette.base0C })
 
 -- Treesitter (Golang & General)
-set_hl(0, "@variable", { fg = palette.base0A })                        -- Putih (agar kode seimbang)
-set_hl(0, "@variable.builtin", { fg = palette.base0A, italic = true }) -- self, this
-set_hl(0, "@variable.parameter", { fg = palette.base0A })              -- Parameter fungsi (Light Teal)
+set_hl(0, "@variable", { fg = palette.base09 })                        -- Putih (agar kode seimbang)
+set_hl(0, "@variable.builtin", { fg = palette.base09, italic = true }) -- self, this
+set_hl(0, "@variable.parameter", { fg = palette.base09 })              -- Parameter fungsi (Light Teal)
 set_hl(0, "@variable.member", { fg = palette.base0C })                 -- Struct Fields (Purple)
 set_hl(0, "@property", { fg = palette.base0C })                        -- Object Properties
 

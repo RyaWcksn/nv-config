@@ -17,7 +17,6 @@ vim.keymap.set('n', 'n', 'nzzzv')
 vim.keymap.set('n', 'N', 'Nzzzv')
 
 -- Folding
--- vim.keymap.set({ 'n' }, '<leader>kk', "zc", { desc = "Fold" })
 vim.keymap.set("n", "<leader>kk", function()
 	local linenr = vim.fn.line(".")
 	-- If there's no fold to be opened/closed, do nothing.
@@ -80,33 +79,11 @@ end, { expr = true, noremap = true })
 vim.keymap.set("t", "jk", "<C-\\><C-n>")
 vim.keymap.set({ "i", "v" }, "jk", "<esc>")
 
--- Git
-local lazygit = function()
-	utils.open_command('lazygit')
-end
-vim.keymap.set('n', '<leader>gg', lazygit, { desc = "Open lazygit" })
-vim.keymap.set({ 'n', 'v' }, '<leader>gb', utils.git_blame_current_line, { desc = "Git Blame current line" })
-vim.keymap.set('n', '<leader>gl', utils.find_and_switch_branch, { desc = "Find and switch git branch" })
-
 
 -- Searching feature
-local search_file = function()
-	utils.get_file(function(selected_file)
-		vim.cmd("e " .. vim.fn.fnameescape(selected_file))
-	end)
-end
-local search_word = function()
-	local query
-	vim.ui.input({ prompt = "Keyword = " }, function(input)
-		query = input
-	end)
-
-	vim.cmd('vimgrep /' .. query .. '/ **/*')
-	vim.cmd('copen')
-end
 vim.keymap.set('n', '<leader>ff', ":find ", { desc = "Search file" })
 vim.keymap.set('n', '<leader>fr', utils.search_and_replace, { desc = "Search and replace" })
-vim.keymap.set('n', '<leader>fw', search_word, { desc = "Search words in codebase" })
+vim.keymap.set('n', '<leader>fw', ":Search ", { desc = "Search words in codebase" })
 vim.keymap.set('n', '<leader>fa', ':find *<TAB>', { desc = "Search", remap = true })
 
 -- Buffer
@@ -147,22 +124,3 @@ vim.keymap.set("i", "}", utils.make_closer("}"), map_opts)
 vim.keymap.set("n", "mm", "%")
 vim.keymap.set("x", "m", "%")
 vim.keymap.set("o", "m", "%")
-
--- Notes keymaps
-vim.keymap.set("n", "<leader>nt", function()
-	utils.open_notes("todo")
-end, { desc = "Open Note [T]odo" })
-
-vim.keymap.set("n", "<leader>nj", function()
-	utils.open_notes("journal")
-end, { desc = "Open Note [J]ournal" })
-
-vim.keymap.set("n", "<leader>ni", function()
-	utils.open_notes("inspiration")
-end, { desc = "Open Note [I]nspiration" })
-
-vim.keymap.set("n", "<leader>nd", function()
-	utils.open_notes("done")
-end, { desc = "Open Note [D]one" })
-
--- Debug

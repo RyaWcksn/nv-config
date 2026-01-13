@@ -8,19 +8,10 @@ vim.g.netrw_altfile = 0
 vim.g.netrw_list_hide = '^\\.\\.\\?/$,\\(^\\|\\s\\s\\)\\zs\\.\\S\\+' -- ALSO HIDE ./ and ../ when hidden files are shown
 
 local function netrw_create_file()
-	-- Get current netrw directory
 	local netrw_dir = vim.fn.expand("%:p:h") .. "/"
-
-	-- Prompt user for file path
 	local file_path = vim.fn.input("New file: ", netrw_dir, "file")
-
-	-- Ensure a filename was entered
 	if file_path == "" then return end
-
-	-- Create parent directory if it doesn't exist
 	vim.fn.mkdir(vim.fn.fnamemodify(file_path, ":h"), "p")
-
-	-- Open file in the right pane
 	vim.cmd("wincmd l") -- Move to the right window
 	vim.cmd("edit " .. vim.fn.fnameescape(file_path))
 end

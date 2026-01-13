@@ -39,12 +39,18 @@ local function lsp()
 	return errors .. warnings .. hints .. info .. "%#Normal# "
 end
 
-local function lsp_servers()
-	local clients = vim.lsp.get_clients({ bufnr = 0 })
-	if not clients or #clients == 0 then
-		return 'No Active Lsp'
+local function lsp_status()
+	local attached_clients = vim.lsp.get_clients({ bufnr = 0 })
+	if #attached_clients == 0 then
+		return ""
 	end
-	return "[LSP]"
+	local names = vim.iter(attached_clients)
+	    :map(function(client)
+		    local name = client.name:gsub("language.server", "ls")
+		    return name
+	    end)
+	    :totable()
+	return "[" .. table.concat(names, ", ") .. "]"
 end
 
 local function git_branch()
@@ -70,7 +76,7 @@ function Statusline.active()
 	return table.concat {
 		mode(),
 		"[", filepath(), "%t] ",
-		lsp_servers(),
+		lsp_status(),
 		lsp(),
 		"%=",
 		git_branch(),
@@ -105,10 +111,6 @@ setup_statusline()
 
 local statusline_filetype_exclude = {
 	"help",
-	"toggleterm",
-	"AvanteInput",
-	"Avante",
-	"AvanteSelectedFiles",
 	"qf",
 	"prompt",
 	"netrw"

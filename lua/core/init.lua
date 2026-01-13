@@ -3,7 +3,6 @@ vim.api.nvim_create_autocmd({ 'VimEnter', 'BufReadPre', 'BufNewFile' }, {
 		require('core.netrw')
 		require('core.option')
 		require('core.mapping')
-		-- require('core.winbar')
 		require('core.statusline')
 		require('core.fold')
 		require('core.autocmd')

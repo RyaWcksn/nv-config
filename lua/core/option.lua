@@ -22,6 +22,11 @@ vim.opt.smartcase = true
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
 
+vim.o.foldenable = true
+vim.o.foldlevel = 99
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+
 
 -- Nicer grepping when `rg` is available.
 if vim.fn.executable('rg') then
