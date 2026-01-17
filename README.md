@@ -79,6 +79,23 @@ The configuration is structured in a modular way, making it easy to maintain and
 
 - This directory contains the configurations for the different language servers.
 
+## 🔧 LSP Server Installation
+
+```bash
+# Go
+go install golang.org/x/tools/gopls@latest
+go install github.com/nametake/golangci-lint-langserver@latest
+
+# TypeScript/JavaScript
+npm install -g typescript typescript-language-server
+
+# Lua (macOS)
+brew install lua-language-server
+
+# SQL
+go install github.com/sqls-server/sqls@latest
+```
+
 ### `lua/`
 
 - **`configs/`**: This directory contains the configurations for the plugins and other parts of Neovim.
