@@ -114,12 +114,13 @@ return {
 	end,
 	settings = {
 		['rust-analyzer'] = {
+			files = { watcher = "server" },
+			cargo = { targetDir = true },
+			check = { command = "clippy" },
 			diagnostics = {
 				enable = false,
 			},
-			cargo = {
-				allFeatures = true,
-			},
+			rustc = { source = "discover" },
 			inlayHints = {
 				bindingModeHints = {
 					enable = true
@@ -129,7 +130,14 @@ return {
 				},
 				closingBraceHints = {
 					enable = true
-				}
+				},
+				closureCaptureHints = {
+					enabled = true
+				},
+				closureReturnTypeHints = {
+					enable = "always"
+				},
+				maxLength = 100,
 			},
 			lens = {
 				debug = { enable = true },

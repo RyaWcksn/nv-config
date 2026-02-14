@@ -79,9 +79,19 @@ vim.api.nvim_create_autocmd('LspAttach', {
 					autotrigger = true,
 					convert = function(item)
 						local abbr = item.label:match("[%w_.]+.*") or item.label
+						local doc = item.documentation
+						if not doc or type(doc) ~= "string" or not vim.startswith(doc, "#") then
+							return {}
+						end
+						local color = doc:sub(1, 7) -- Make sure to get the full hex code
+						local hl_color = color:sub(2) -- Remove the '#' for hl group name
+						local hl_group = "lsp_color_" .. hl_color
+						vim.api.nvim_set_hl(0, hl_group, { fg = color, bg = color })
 						return {
 							abbr = #abbr > 25 and abbr:sub(1, 24) .. "…" or abbr,
 							menu = "",
+							kind_hlgroup = "lsp_color_" .. hl_color,
+							kind = "XX",
 						}
 					end,
 				})
