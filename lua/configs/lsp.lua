@@ -55,7 +55,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', '<leader>lt', vim.diagnostic.setqflist, { desc = "Diagnostics" })
 		vim.keymap.set('n', '<leader>lo', vim.lsp.buf.document_symbol, { desc = "Document Symbol" })
 		vim.keymap.set('n', '<C-k>', vim.diagnostic.open_float, { desc = "Open diagnostic float" })
-		vim.keymap.set('i', '<C-j>', vim.lsp.buf.signature_help, { desc = "Open diagnostic float" })
+		vim.keymap.set('i', '<C-j>', vim.lsp.buf.signature_help,
+			{ desc = "Open diagnostic float", border = "single" })
 		vim.lsp.document_color.enable()
 
 		local function trigger_completion()
@@ -70,9 +71,25 @@ vim.api.nvim_create_autocmd('LspAttach', {
 			callback = trigger_completion,
 		})
 
+		local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+		function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+			opts = opts or {}
+			opts.border = "rounded"
+			return orig_util_open_floating_preview(contents, syntax, opts, ...)
+		end
+
 		-- -- ========================
 		-- LSP Features per server capabilities
 		-- ========================
+		--
+		if client:supports_method("textDocument/signatureHelp") then
+			vim.api.nvim_create_autocmd("CursorHoldI", {
+				buffer = ev.buf,
+				callback = function()
+					vim.lsp.buf.signature_help({ focusable = false })
+				end,
+			})
+		end
 		if client:supports_method('textDocument/completion') then
 			vim.lsp.completion.enable(true, client.id, ev.buf,
 				{

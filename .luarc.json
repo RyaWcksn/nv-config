@@ -6,6 +6,7 @@
   "workspace.library": ["$VIMRUNTIME"],
     "diagnostics.disable": [
         "param-type-mismatch",
-        "assign-type-mismatch"
+        "assign-type-mismatch",
+        "duplicate-set-field"
     ]
 }
